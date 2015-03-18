@@ -10,10 +10,6 @@ function startsWith(s, prefix) {
     return s.substring(0, prefix.length) === prefix;
 }
 
-function endsWith(s, prefix) {
-    return s.length >= prefix.length && s.substr(-prefix.length) === prefix;
-}
-
 function isFromOrigin(origin, obj) {
     return obj.meta.origin === origin;
 }
@@ -65,6 +61,7 @@ var eventNameCapitalization = {
     oncancel: "onCancel",
     onchange: "onChange",
     onchildrenprocessed: "onChildrenProcessed",
+    onclick: "onClick",
     onclosed: "onClosed",
     oncontentanimating: "onContentAnimating",
     ondatasourcecountchanged: "onDataSourceCountChanged",
@@ -115,21 +112,13 @@ function keepNamespace(name, obj) {
         namespacesToIgnore.indexOf(name) === -1;
 }
 
-function keepProperty(propertyName) {
-    return !endsWith(propertyName.toLowerCase(), "element");
-}
-
 function getControlsAndProperties(env) {
     var missingEvents = {};
     function getProperties(obj) {
         var props = [];
         Object.keys(obj.properties).forEach(function (propName) {
             var p = obj.properties[propName].type;
-            if (isBuiltin(p) || isReference(p) || isEnum(p)) {
-                if (keepProperty(propName)) {
-                    props.push(propName);
-                }
-            } else if (isFunction(p)) {
+            if (isBuiltin(p) || isReference(p) || isEnum(p) || isFunction(p)) {
                 if (isEvent(propName)) {
                     var capitalizedEventName = eventNameCapitalization[propName];
                     if (capitalizedEventName) {
@@ -137,6 +126,9 @@ function getControlsAndProperties(env) {
                     } else {
                         missingEvents[propName] = true;
                     }
+                } else if (!isFunction(p)) {
+                    // All functions, other than events, are ignored.
+                    props.push(propName);
                 }
             } else {
                 throw "getControlsAndProperties getProperties NYI: " + JSON.stringify(p, null, 2);
