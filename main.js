@@ -181,6 +181,43 @@ function indent(n) {
     return s;
 }
 
+function sortedPrint(obj, indentCount) {
+    if (typeof obj === "boolean" || typeof obj === "number") {
+        return "" + obj;
+    } else if (typeof obj === "string") {
+        return '"' + obj + '"';
+    } else if (Array.isArray(obj)) {
+        return sortedPrintArray(obj, indentCount);
+    } else if (typeof obj === "object") {
+        return sortedPrintObject(obj, indentCount);
+    } else {
+        throw "sortedPrint: unknown type: " + (typeof obj);
+    }
+}
+
+function sortedPrintArray(array, indentCount) {
+    indentCount = (indentCount || 0) + 1;
+    var count = array.length;
+    var out = "[";
+    array.sort().forEach(function (item, i) {
+        out += "\n" + indent(indentCount) + sortedPrint(item, indentCount) + (i + 1 < count ? "," : "");
+    });
+    out += "\n" + indent(indentCount - 1) + "]";
+    return out;
+}
+
+function sortedPrintObject(obj, indentCount) {
+    indentCount = (indentCount || 0) + 1;
+    var keys = Object.keys(obj);
+    var keyCount = keys.length;
+    var out = "{";
+    Object.keys(obj).sort().forEach(function (key, i) {
+        out += "\n" + indent(indentCount) + key + ": " + sortedPrint(obj[key], indentCount) + (i + 1 < keyCount ? "," : "");
+    });
+    out += "\n" + indent(indentCount - 1) + "}";
+    return out;
+}
+
 function main() {
     if (process.argv.length < 3) {
         console.log("Please pass a valid path. Usage: node main.js /path/to/winjs.d.ts");
@@ -190,17 +227,7 @@ function main() {
     var filePath = path.resolve(process.argv[2]);
     var output = processFile(filePath);
     
-    var s = "var RawControlApis = {";
-    var controlCount = Object.keys(output).length;
-    Object.keys(output).sort().forEach(function (control, controlI) {
-        s += "\n" + indent(1) + control + ": [";
-        var propCount = output[control].length;
-        output[control].sort().forEach(function (prop, propI) {
-            s += "\n" + indent(2) + '"' + prop + '"' + (propI + 1 < propCount ? "," : "");
-        });
-        s += "\n" + indent(1) + "]" + (controlI + 1 < controlCount ? "," : "");
-    });
-    s += "\n};";
+    var s = "var RawControlApis = " + sortedPrint(output) + ";";
     console.log(s);
 }
 
