@@ -112,23 +112,29 @@ function keepNamespace(name, obj) {
         namespacesToIgnore.indexOf(name) === -1;
 }
 
+var eventTypeInfo = {
+    name: "Function",
+    type: "reference",
+    typeArguments: []
+};
+
 function getControlsAndProperties(env) {
     var missingEvents = {};
     function getProperties(obj) {
-        var props = [];
+        var props = {};
         Object.keys(obj.properties).forEach(function (propName) {
             var p = obj.properties[propName].type;
             if (isBuiltin(p) || isReference(p) || isEnum(p) || isFunction(p)) {
                 if (isEvent(propName)) {
                     var capitalizedEventName = eventNameCapitalization[propName];
                     if (capitalizedEventName) {
-                        props.push(capitalizedEventName);
+                        props[capitalizedEventName] = eventTypeInfo;
                     } else {
                         missingEvents[propName] = true;
                     }
                 } else if (!isFunction(p)) {
                     // All functions, other than events, are ignored.
-                    props.push(propName);
+                    props[propName] = p;
                 }
             } else {
                 throw "getControlsAndProperties getProperties NYI: " + JSON.stringify(p, null, 2);
@@ -198,24 +204,32 @@ function sortedPrint(obj, indentCount) {
 function sortedPrintArray(array, indentCount) {
     indentCount = (indentCount || 0) + 1;
     var count = array.length;
-    var out = "[";
-    array.sort().forEach(function (item, i) {
-        out += "\n" + indent(indentCount) + sortedPrint(item, indentCount) + (i + 1 < count ? "," : "");
-    });
-    out += "\n" + indent(indentCount - 1) + "]";
-    return out;
+    if (count > 0) {
+        var out = "[";
+        array.sort().forEach(function (item, i) {
+            out += "\n" + indent(indentCount) + sortedPrint(item, indentCount) + (i + 1 < count ? "," : "");
+        });
+        out += "\n" + indent(indentCount - 1) + "]";
+        return out;
+    } else {
+        return "[]";
+    }
 }
 
 function sortedPrintObject(obj, indentCount) {
     indentCount = (indentCount || 0) + 1;
     var keys = Object.keys(obj);
     var keyCount = keys.length;
-    var out = "{";
-    Object.keys(obj).sort().forEach(function (key, i) {
-        out += "\n" + indent(indentCount) + key + ": " + sortedPrint(obj[key], indentCount) + (i + 1 < keyCount ? "," : "");
-    });
-    out += "\n" + indent(indentCount - 1) + "}";
-    return out;
+    if (keyCount > 0) {
+        var out = "{";
+        keys.sort().forEach(function (key, i) {
+            out += "\n" + indent(indentCount) + key + ": " + sortedPrint(obj[key], indentCount) + (i + 1 < keyCount ? "," : "");
+        });
+        out += "\n" + indent(indentCount - 1) + "}";
+        return out;
+    } else {
+        return "{}";
+    }
 }
 
 function main() {
