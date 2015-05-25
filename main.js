@@ -88,6 +88,7 @@ var eventNameCapitalization = {
     onquerychanged: "onQueryChanged",
     onquerysubmitted: "onQuerySubmitted",
     onreceivingfocusonkeyboardinput: "onReceivingFocusOnKeyboardInput",
+    onresultsuggestionchosen: "onResultSuggestionChosen",
     onresultsuggestionschosen: "onResultSuggestionsChosen",
     onselectionchanged: "onSelectionChanged",
     onselectionchanging: "onSelectionChanging",
