@@ -119,7 +119,17 @@ var eventTypeInfo = {
     typeArguments: []
 };
 
-function getControlsAndProperties(env) {
+function getEnumTypeInfo(enums, name) {
+    return {
+        type: "enum",
+        values: enums[name].map(function (value) {
+            var parts = value.split(".");
+            return parts[parts.length - 1];
+        })
+    };
+}
+
+function getControlsAndProperties(env, enums) {
     var missingEvents = {};
     function getProperties(obj) {
         var props = {};
@@ -133,6 +143,8 @@ function getControlsAndProperties(env) {
                     } else {
                         missingEvents[propName] = true;
                     }
+                } else if (isEnum(p)) {
+                    props[propName] = getEnumTypeInfo(enums, p.name);
                 } else if (!isFunction(p)) {
                     // All functions, other than events, are ignored.
                     props[propName] = p;
@@ -177,7 +189,7 @@ function processFile(filePath) {
         { file: filePath, text: text }
     ]);
 
-    return getControlsAndProperties(result.env);
+    return getControlsAndProperties(result.env, result.enums);
 }
 
 function indent(n) {
