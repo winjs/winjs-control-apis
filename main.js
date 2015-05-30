@@ -129,9 +129,35 @@ function getEnumTypeInfo(enums, name) {
     };
 }
 
+// Some WinJS enums are typed as strings in the d.ts. By convention, the values of
+// such enums are available off of a static property which has the same name as the
+// instance property although the first letter is capitalized. For example, each
+// SplitView has a panePlacement property and its values are available under
+// WinJS.UI.SplitView.PanePlacement. This function, given the name of an instance
+// property, uses this convention to extract the enum values for that property. If
+// the property doesn't follow the convention, null is returned.
+function getStringBasedEnumTypeInfo(env, namespace, propName) {
+    var parts = namespace.split(".");
+    if (startsWith(namespace, "WinJS.UI.") && parts.length === 3) {
+        var controlName = parts[parts.length - 1];
+        var theClass = env["module:WinJS.UI"].object.properties[controlName];
+        if (theClass) {
+            var name = propName[0].toUpperCase() + propName.substring(1);
+            var enumDef = theClass.type.properties[name];
+            if (enumDef) {
+                return {
+                    type: "enum",
+                    values: Object.keys(enumDef.type.properties)
+                };
+            }
+        }
+    }
+    return null;
+}
+
 function getControlsAndProperties(env, enums) {
     var missingEvents = {};
-    function getProperties(obj) {
+    function getProperties(namespace, obj) {
         var props = {};
         Object.keys(obj.properties).forEach(function (propName) {
             var p = obj.properties[propName].type;
@@ -145,6 +171,8 @@ function getControlsAndProperties(env, enums) {
                     }
                 } else if (isEnum(p)) {
                     props[propName] = getEnumTypeInfo(enums, p.name);
+                } else if (p.type === "string") {
+                    props[propName] = getStringBasedEnumTypeInfo(env, namespace, propName) || p;
                 } else if (!isFunction(p)) {
                     // All functions, other than events, are ignored.
                     props[propName] = p;
@@ -163,7 +191,7 @@ function getControlsAndProperties(env, enums) {
         if (keepNamespace(namespace, obj)) {
             var parts = namespace.split(".");
             var lastPart = parts[parts.length - 1];
-            out[lastPart] = getProperties(obj);
+            out[lastPart] = getProperties(namespace, obj);
         }
     }
 
