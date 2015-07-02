@@ -52,7 +52,9 @@ function isEvent(propName) {
 }
 
 var eventNameCapitalization = {
+    onafterclose: "onAfterClose",
     onafterhide: "onAfterHide",
+    onafteropen: "onAfterOpen",
     onaftershow: "onAfterShow",
     onbeforeclose: "onBeforeClose",
     onbeforehide: "onBeforeHide",
