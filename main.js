@@ -103,6 +103,8 @@ var namespacesToIgnore = [
     "WinJS.UI.DOMEventMixin",
     "WinJS.UI.HtmlControl",
     "WinJS.UI.Layout",
+    "WinJS.UI.MediaElementAdapter",
+    "WinJS.UI.MediaPlayer",
     "WinJS.UI.Repeater",
     "WinJS.UI.SettingsFlyout",
     "WinJS.UI.StorageDataSource",
