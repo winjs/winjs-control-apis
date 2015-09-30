@@ -52,6 +52,7 @@ function isEvent(propName) {
 }
 
 var eventNameCapitalization = {
+    onaccessibilityannotationcomplete: "onAccessibilityAnnotationComplete",
     onafterclose: "onAfterClose",
     onafterhide: "onAfterHide",
     onafteropen: "onAfterOpen",
@@ -67,8 +68,10 @@ var eventNameCapitalization = {
     onclosed: "onClosed",
     oncontentanimating: "onContentAnimating",
     ondatasourcecountchanged: "onDataSourceCountChanged",
+    onfootervisibilitychanged: "onFooterVisibilityChanged",
     ongroupheaderinvoked: "onGroupHeaderInvoked",
     onheaderinvoked: "onHeaderInvoked",
+    onheadervisibilitychanged: "onHeaderVisibilityChanged",
     oninvoked: "onInvoked",
     onitemanimationend: "onItemAnimationEnd",
     onitemanimationstart: "onItemAnimationStart",
@@ -182,8 +185,8 @@ function getControlsAndProperties(env, enums) {
                     props[propName] = p;
                 }
             } else {
-                throw "getControlsAndProperties getProperties NYI: " + JSON.stringify(p, null, 2);
                 debugger;
+                throw "getControlsAndProperties getProperties NYI: " + JSON.stringify(p, null, 2);
             }
         });
         return props;
