@@ -6,7 +6,7 @@ A command line tool which takes a version of the WinJS TypeScript type definitio
 
 - Clone the project:
   ```
-  git clone https://github.com/rigdern/winjs-control-apis.git
+  git clone git@github.com:winjs/winjs-control-apis.git
   ```
 
 - Install the dependencies:
