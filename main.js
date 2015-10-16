@@ -210,10 +210,10 @@ function getControlsAndProperties(env, enums) {
     }
 
     if (Object.keys(missingEvents).length > 0) {
-        console.log("Unknown capitalization for the following events. Please update eventNameCapitalization to include these events:");
+        console.error("Unknown capitalization for the following events. Please update eventNameCapitalization to include these events:");
         var len = Object.keys(missingEvents).length;
         Object.keys(missingEvents).sort().forEach(function (eventName, i) {
-            console.log('  ' + eventName + ': "' + eventName + '"' + (i + 1 === len ? "" : ","));
+            console.error('  ' + eventName + ': "' + eventName + '"' + (i + 1 === len ? "" : ","));
         });
         throw "Unknown capitalization for some events.";
     }
