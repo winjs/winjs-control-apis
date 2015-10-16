@@ -52,62 +52,69 @@ function isEvent(propName) {
 }
 
 var eventNameCapitalization = {
-    onaccessibilityannotationcomplete: "onAccessibilityAnnotationComplete",
-    onafterclose: "onAfterClose",
-    onafterhide: "onAfterHide",
-    onafteropen: "onAfterOpen",
-    onaftershow: "onAfterShow",
-    onbeforeclose: "onBeforeClose",
-    onbeforehide: "onBeforeHide",
-    onbeforeopen: "onBeforeOpen",
-    onbeforeshow: "onBeforeShow",
-    oncancel: "onCancel",
-    onchange: "onChange",
-    onchildrenprocessed: "onChildrenProcessed",
-    onclick: "onClick",
-    onclosed: "onClosed",
-    oncontentanimating: "onContentAnimating",
-    ondatasourcecountchanged: "onDataSourceCountChanged",
-    onfootervisibilitychanged: "onFooterVisibilityChanged",
-    ongroupheaderinvoked: "onGroupHeaderInvoked",
-    onheaderinvoked: "onHeaderInvoked",
-    onheadervisibilitychanged: "onHeaderVisibilityChanged",
-    oninvoked: "onInvoked",
-    onitemanimationend: "onItemAnimationEnd",
-    onitemanimationstart: "onItemAnimationStart",
-    onitemdragbetween: "onItemDragBetween",
-    onitemdragchanged: "onItemDragChanged",
-    onitemdragdrop: "onItemDragDrop",
-    onitemdragend: "onItemDragEnd",
-    onitemdragenter: "onItemDragEnter",
-    onitemdragleave: "onItemDragLeave",
-    onitemdragstart: "onItemDragStart",
-    oniteminvoked: "onItemInvoked",
-    onkeyboardnavigating: "onKeyboardNavigating",
-    onloadingstatechanged: "onLoadingStateChanged",
-    onopened: "onOpened",
-    onpagecompleted: "onPageCompleted",
-    onpageselected: "onPageSelected",
-    onpagevisibilitychanged: "onPageVisibilityChanged",
-    onpreviewchange: "onPreviewChange",
-    onquerychanged: "onQueryChanged",
-    onquerysubmitted: "onQuerySubmitted",
-    onreceivingfocusonkeyboardinput: "onReceivingFocusOnKeyboardInput",
-    onresultsuggestionchosen: "onResultSuggestionChosen",
-    onresultsuggestionschosen: "onResultSuggestionsChosen",
-    onselectionchanged: "onSelectionChanged",
-    onselectionchanging: "onSelectionChanging",
-    onsplittoggle: "onSplitToggle",
-    onsuggestionsrequested: "onSuggestionsRequested",
-    onzoomchanged: "onZoomChanged"
+  onaccessibilityannotationcomplete: "onAccessibilityAnnotationComplete",
+  onafterclose: "onAfterClose",
+  onafterhide: "onAfterHide",
+  onafterhidecontrols: "onAfterHideControls",
+  onafteropen: "onAfterOpen",
+  onaftershow: "onAfterShow",
+  onaftershowcontrols: "onAfterShowControls",
+  onbeforeclose: "onBeforeClose",
+  onbeforehide: "onBeforeHide",
+  onbeforehidecontrols: "onBeforeHideControls",
+  onbeforeopen: "onBeforeOpen",
+  onbeforeshow: "onBeforeShow",
+  onbeforeshowcontrols: "onBeforeShowControls",
+  oncancel: "onCancel",
+  onchange: "onChange",
+  onchildrenprocessed: "onChildrenProcessed",
+  onclick: "onClick",
+  onclosed: "onClosed",
+  oncontentanimating: "onContentAnimating",
+  ondatasourcecountchanged: "onDataSourceCountChanged",
+  onfootervisibilitychanged: "onFooterVisibilityChanged",
+  ongroupheaderinvoked: "onGroupHeaderInvoked",
+  onheaderinvoked: "onHeaderInvoked",
+  onheadervisibilitychanged: "onHeaderVisibilityChanged",
+  oninvoked: "onInvoked",
+  onitemanimationend: "onItemAnimationEnd",
+  onitemanimationstart: "onItemAnimationStart",
+  onitemdragbetween: "onItemDragBetween",
+  onitemdragchanged: "onItemDragChanged",
+  onitemdragdrop: "onItemDragDrop",
+  onitemdragend: "onItemDragEnd",
+  onitemdragenter: "onItemDragEnter",
+  onitemdragleave: "onItemDragLeave",
+  onitemdragstart: "onItemDragStart",
+  oniteminvoked: "onItemInvoked",
+  onkeyboardnavigating: "onKeyboardNavigating",
+  onloadingstatechanged: "onLoadingStateChanged",
+  onmarkerreached: "onMarkerReached",
+  onmediacommandexecuted: "onMediaCommandExecuted",
+  onopened: "onOpened",
+  onpagecompleted: "onPageCompleted",
+  onpageselected: "onPageSelected",
+  onpagevisibilitychanged: "onPageVisibilityChanged",
+  onpreviewchange: "onPreviewChange",
+  onquerychanged: "onQueryChanged",
+  onquerysubmitted: "onQuerySubmitted",
+  onreceivingfocusonkeyboardinput: "onReceivingFocusOnKeyboardInput",
+  onresultsuggestionchosen: "onResultSuggestionChosen",
+  onresultsuggestionschosen: "onResultSuggestionsChosen",
+  onselectionchanged: "onSelectionChanged",
+  onselectionchanging: "onSelectionChanging",
+  onsplittoggle: "onSplitToggle",
+  onsuggestionsrequested: "onSuggestionsRequested",
+  ontargetratechange: "onTargetRateChange",
+  ontargettimeupdate: "onTargetTimeUpdate",
+  onthumbnailrequest: "onThumbnailRequest",
+  onzoomchanged: "onZoomChanged",
 };
 
 var namespacesToIgnore = [
     "WinJS.UI.DOMEventMixin",
     "WinJS.UI.HtmlControl",
     "WinJS.UI.Layout",
-    "WinJS.UI.MediaElementAdapter",
-    "WinJS.UI.MediaPlayer",
     "WinJS.UI.Repeater",
     "WinJS.UI.SettingsFlyout",
     "WinJS.UI.StorageDataSource",
@@ -203,10 +210,10 @@ function getControlsAndProperties(env, enums) {
     }
 
     if (Object.keys(missingEvents).length > 0) {
-        console.log("Unknown capitalization for the following events. Please update eventNameCapitalization to include these events:");
+        console.error("Unknown capitalization for the following events. Please update eventNameCapitalization to include these events:");
         var len = Object.keys(missingEvents).length;
         Object.keys(missingEvents).sort().forEach(function (eventName, i) {
-            console.log('  ' + eventName + ': "' + eventName + '"' + (i + 1 === len ? "" : ","));
+            console.error('  ' + eventName + ': "' + eventName + '"' + (i + 1 === len ? "" : ","));
         });
         throw "Unknown capitalization for some events.";
     }
@@ -214,15 +221,20 @@ function getControlsAndProperties(env, enums) {
     return out;
 }
 
-function processFile(filePath) {
-    var text = fs.readFileSync(filePath, 'utf8').toString();
-    var result = tscore([
+function processFiles(filePaths) {
+    var filesToProcess = [
         {
             file: ">lib.d.ts",
             text: fs.readFileSync(__dirname + '/lib/lib.d.ts', 'utf8')
         },
-        { file: filePath, text: text }
-    ]);
+    ];
+
+    filePaths.forEach(function(filePath){
+      var text = fs.readFileSync(filePath, 'utf8').toString();
+      filesToProcess.push({ file: filePath, text: text });
+    });
+
+    var result = tscore(filesToProcess);
 
     return getControlsAndProperties(result.env, result.enums);
 }
@@ -280,19 +292,39 @@ function sortedPrintObject(obj, indentCount) {
     }
 }
 
+function getRawControlApi(files) {
+
+  if(typeof files === "string") {
+    files = [files];
+  }
+
+  var filePaths = files.map(function(file) {
+    return path.resolve(file)
+  });
+
+  var output = processFiles(filePaths);
+  return output;
+  // var sortedOutput = sortedPrint(output);
+  // return sortedOutput;
+}
+
 function main() {
     if (process.argv.length < 3) {
-        console.log("Please pass a valid path. Usage: node main.js /path/to/winjs.d.ts");
+        console.log("Please pass a valid paths. Usage: node main.js /path/to/winjs.d.ts [/path/to/ExtensionXYZ.d.ts, ...");
         return;
     }
 
-    var filePath = path.resolve(process.argv[2]);
-    var output = processFile(filePath);
-    
-    var s = "var RawControlApis = " + sortedPrint(output) + ";";
+    var output = getRawControlApi(process.argv.slice(2));
+    var sortedOutput = sortedPrint(output);
+    var s = "var RawControlApis = " + sortedOutput + ";";
     console.log(s);
 }
 
 if (require.main === module) {
     main();
+} else {
+  module.exports = {
+    getRawControlApi: getRawControlApi,
+    sortedPrint: sortedPrint
+  }
 }
