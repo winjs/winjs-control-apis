@@ -214,15 +214,20 @@ function getControlsAndProperties(env, enums) {
     return out;
 }
 
-function processFile(filePath) {
-    var text = fs.readFileSync(filePath, 'utf8').toString();
-    var result = tscore([
+function processFiles(filePaths) {
+    var filesToProcess = [
         {
             file: ">lib.d.ts",
             text: fs.readFileSync(__dirname + '/lib/lib.d.ts', 'utf8')
         },
-        { file: filePath, text: text }
-    ]);
+    ];
+
+    filePaths.forEach(function(filePath){
+      var text = fs.readFileSync(filePath, 'utf8').toString();
+      filesToProcess.push({ file: filePath, text: text });
+    });
+
+    var result = tscore(filesToProcess);
 
     return getControlsAndProperties(result.env, result.enums);
 }
@@ -282,13 +287,18 @@ function sortedPrintObject(obj, indentCount) {
 
 function main() {
     if (process.argv.length < 3) {
-        console.log("Please pass a valid path. Usage: node main.js /path/to/winjs.d.ts");
+        console.log("Please pass a valid paths. Usage: node main.js /path/to/winjs.d.ts [/path/to/ExtensionXYZ.d.ts]");
         return;
     }
 
-    var filePath = path.resolve(process.argv[2]);
-    var output = processFile(filePath);
-    
+    var filePaths = process.argv
+      .slice(2)
+      .map(function(file){
+        return path.resolve(file)
+      });
+
+    var output = processFiles(filePaths);
+
     var s = "var RawControlApis = " + sortedPrint(output) + ";";
     console.log(s);
 }
