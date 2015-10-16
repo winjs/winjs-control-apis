@@ -294,7 +294,7 @@ function sortedPrintObject(obj, indentCount) {
 
 function main() {
     if (process.argv.length < 3) {
-        console.log("Please pass a valid paths. Usage: node main.js /path/to/winjs.d.ts [/path/to/ExtensionXYZ.d.ts]");
+        console.log("Please pass a valid paths. Usage: node main.js /path/to/winjs.d.ts [/path/to/ExtensionXYZ.d.ts, ...");
         return;
     }
 
