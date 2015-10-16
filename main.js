@@ -292,24 +292,39 @@ function sortedPrintObject(obj, indentCount) {
     }
 }
 
+function getRawControlApi(files) {
+
+  if(typeof files === "string") {
+    files = [files];
+  }
+
+  var filePaths = files.map(function(file) {
+    return path.resolve(file)
+  });
+
+  var output = processFiles(filePaths);
+  return output;
+  // var sortedOutput = sortedPrint(output);
+  // return sortedOutput;
+}
+
 function main() {
     if (process.argv.length < 3) {
         console.log("Please pass a valid paths. Usage: node main.js /path/to/winjs.d.ts [/path/to/ExtensionXYZ.d.ts, ...");
         return;
     }
 
-    var filePaths = process.argv
-      .slice(2)
-      .map(function(file){
-        return path.resolve(file)
-      });
-
-    var output = processFiles(filePaths);
-
-    var s = "var RawControlApis = " + sortedPrint(output) + ";";
+    var output = getRawControlApi(process.argv.slice(2));
+    var sortedOutput = sortedPrint(output);
+    var s = "var RawControlApis = " + sortedOutput + ";";
     console.log(s);
 }
 
 if (require.main === module) {
     main();
+} else {
+  module.exports = {
+    getRawControlApi: getRawControlApi,
+    sortedPrint: sortedPrint
+  }
 }
